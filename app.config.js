@@ -4,5 +4,6 @@ module.exports = {
   // All values in extra will be passed to your app.
   extra: {
     url: 'http://165.51.222.52:3120',
+    // url: 'http://localhost:3120',
   },
 }

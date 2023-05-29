@@ -7,7 +7,7 @@ import Constants from 'expo-constants'
 import { useRoute } from '@react-navigation/native'
 import validator from 'validator'
 
-const FormAgent = ({ navigation }) => {
+const Add = ({ navigation }) => {
   const { params } = useRoute()
   const type = useRoute().params ? useRoute().params.type : 'Ajouter'
   const agent = useRoute().params ? useRoute().params.agent : null
@@ -36,7 +36,7 @@ const FormAgent = ({ navigation }) => {
               password: password,
               tel: tel,
               cin: cin,
-              role: 'AGENT_SECURITE',
+              role: 'CHAUFFEUR',
             })
             .then((response) => {
               navigation.navigate('Liste Agents', { agent: response.data })
@@ -88,7 +88,7 @@ const FormAgent = ({ navigation }) => {
   return (
     <View>
       <Text style={{ textAlign: 'center', fontWeight: '900', fontSize: 30 }}>
-        {type} Agent de sécurité
+        {type} Chauffeur
       </Text>
       <Controller
         name="firstName"
@@ -180,6 +180,6 @@ const FormAgent = ({ navigation }) => {
   )
 }
 
-export default FormAgent
+export default Add
 
 const styles = StyleSheet.create({})

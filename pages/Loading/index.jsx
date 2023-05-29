@@ -12,7 +12,6 @@ export default function Loading() {
     try {
       const value = await AsyncStorage.getItem('user')
       if (value) {
-        console.log(JSON.parse(value))
         dispatch({ type: actions.login, user: JSON.parse(value) })
         setStoredData(value)
       } else {

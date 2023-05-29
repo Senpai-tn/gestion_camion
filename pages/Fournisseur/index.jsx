@@ -1,13 +1,10 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React from 'react'
-import { ListAgent } from './Agent'
 
 const Home = ({ navigation }) => {
   return (
     <ScrollView>
-      <View>
-        <ListAgent navigation={navigation} />
-      </View>
+      <View></View>
     </ScrollView>
   )
 }

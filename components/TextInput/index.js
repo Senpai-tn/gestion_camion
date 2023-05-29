@@ -1,10 +1,18 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native'
 import React from 'react'
 
-const TextInputComp = ({ value, type, onChange, error, placeholder }) => {
+const TextInputComp = ({
+  value,
+  type,
+  onChange,
+  error,
+  placeholder,
+  keyboardType,
+}) => {
   return (
     <>
       <TextInput
+        keyboardType={keyboardType ? keyboardType : 'default'}
         secureTextEntry={type === 'password'}
         style={{
           borderWidth: 2,

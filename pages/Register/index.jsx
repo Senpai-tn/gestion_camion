@@ -49,7 +49,6 @@ const Register = ({ navigation }) => {
       matricule,
     } = data
 
-    console.log(service, agence)
     if (email && validator.isEmail(email)) {
       if (password === confirmPassword) {
         if (
@@ -68,9 +67,7 @@ const Register = ({ navigation }) => {
               role: 'PLANIFICATEUR',
               matricule,
             })
-            .then((response) => {
-              console.log(response.data)
-            })
+            .then((response) => {})
         } else setError('matricule', { message: 'Vérifier votre matricule' })
       } else
         setError('confirmPassword', { message: 'Vérifier votre mot de passe' })

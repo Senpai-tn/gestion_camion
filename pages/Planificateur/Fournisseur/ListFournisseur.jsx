@@ -11,20 +11,22 @@ import axios from 'axios'
 import Constants from 'expo-constants'
 import { useRoute } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
-const ListAgent = ({ navigation }) => {
+import FormFournisseur from './FormFournisseur'
+const ListFournisseur = ({ navigation }) => {
+  const [fournisseur, setFournisseur] = useState(null)
   const route = useRoute()
 
-  const [listAgentState, setListAgentState] = useState([])
+  const [listFournisseurState, setListFournisseursState] = useState([])
 
   const consulterListAgent = () => {
     axios
       .get(Constants.expoConfig.extra.url + '/user/search', {
         params: {
-          role: 'AGENT_SECURITE',
+          role: 'FOURNISSEUR',
         },
       })
       .then((response) => {
-        setListAgentState(response.data)
+        setListFournisseursState(response.data)
       })
   }
 
@@ -39,23 +41,26 @@ const ListAgent = ({ navigation }) => {
       })
   }
 
+  const modifierAgent = (user) => {
+    setFournisseur(user)
+    navigation.navigate('Form Fournisseur', { type: 'Modifier', agent: user })
+  }
+
   useEffect(() => {
     consulterListAgent()
-  }, [route])
-  useEffect(() => {
-    consulterListAgent()
-  }, [])
+  }, [route, navigation])
   return (
     <ScrollView>
       <View>
-        <Text>Liste des Agents : {listAgentState.length} actif</Text>
+        <Text>List des Fournisseurs : {listFournisseurState.length} actif</Text>
         <Button
-          title="Ajouter un agent"
+          title="Ajouter un Fournisseur"
           onPress={() => {
-            navigation.navigate('Form Agent', { type: 'Ajouter' })
+            // ajouterAgent()
+            navigation.navigate('Form Fournisseur')
           }}
         />
-        {listAgentState.map((agent, index) => {
+        {listFournisseurState.map((agent, index) => {
           return (
             <View
               key={agent._id}
@@ -72,7 +77,14 @@ const ListAgent = ({ navigation }) => {
               <Text style={{ marginHorizontal: 30 }}>
                 {agent.firstName} {agent.lastName}
               </Text>
-
+              <Pressable
+                style={{ marginHorizontal: 30 }}
+                onPress={() => {
+                  modifierAgent(agent)
+                }}
+              >
+                <Ionicons name="md-pencil" size={32} color="orange" />
+              </Pressable>
               <Pressable
                 onPress={() => {
                   supprimerAgent(agent)
@@ -88,6 +100,6 @@ const ListAgent = ({ navigation }) => {
   )
 }
 
-export default ListAgent
+export default ListFournisseur
 
 const styles = StyleSheet.create({})
