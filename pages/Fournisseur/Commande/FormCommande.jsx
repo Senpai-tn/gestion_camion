@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  Button,
-  ScrollView,
-} from 'react-native'
+import { StyleSheet, Text, Button, ScrollView } from 'react-native'
 import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { TextInputComp } from '../../../components'
@@ -16,7 +9,6 @@ import Dropdown from '../../../components/Dropdown'
 import { useState } from 'react'
 import MultiSelect from 'react-native-multiple-select'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import dayjs from 'dayjs'
 
 const FormCommande = ({ navigation }) => {
   const [listFournisseurState, setListFournisseursState] = useState([])
@@ -154,6 +146,7 @@ const FormCommande = ({ navigation }) => {
             selectedItems={value}
             selectText="Pick Items"
             searchInputPlaceholderText="Search Items..."
+            onChangeInput={(text) => {}}
             tagRemoveIconColor="#CCC"
             tagBorderColor="#CCC"
             tagTextColor="#CCC"

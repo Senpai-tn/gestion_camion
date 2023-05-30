@@ -12,13 +12,13 @@ import {
   FormFournisseur,
   ListFournisseur,
 } from './pages/Planificateur/Fournisseur'
-import FomrCommande from './pages/Planificateur/Commande'
 import { StatusBar } from 'expo-status-bar'
 import ListCommands from './pages/Planificateur/Commande/ListCommands'
 import FormCommande from './pages/Planificateur/Commande/FormCommande'
 import actions from './redux/actions'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Add, List } from './pages/Fournisseur/Chauffeur'
+import { Home as HomeFournisseur } from './pages/Fournisseur'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -65,24 +65,44 @@ const Navigator = () => {
         <Tab.Navigator
           screenOptions={{
             header: () => (
-              <Pressable
-                onPress={() => {
-                  dispatch({ type: actions.login, user: null })
-                  storeData(null)
-                }}
-              >
-                <Text
-                  style={{
-                    color: 'red',
-                    fontWeight: 900,
-                    textAlign: 'right',
-                    paddingHorizontal: 50,
-                    paddingTop: 50,
+              <>
+                <Pressable
+                  onPress={() => {
+                    dispatch({ type: actions.login, user: null })
+                    storeData(null)
                   }}
                 >
-                  Déconnecter
-                </Text>
-              </Pressable>
+                  <Text
+                    style={{
+                      color: 'red',
+                      fontWeight: 900,
+                      textAlign: 'right',
+                      paddingHorizontal: 50,
+                      paddingTop: 50,
+                    }}
+                  >
+                    Déconnecter
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    dispatch({ type: actions.login, user: null })
+                    storeData(null)
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: 'red',
+                      fontWeight: 900,
+                      textAlign: 'left',
+                      paddingHorizontal: 50,
+                      paddingTop: 50,
+                    }}
+                  >
+                    Déconnecter
+                  </Text>
+                </Pressable>
+              </>
             ),
           }}
         >
@@ -182,24 +202,37 @@ const Navigator = () => {
         <Tab.Navigator
           screenOptions={{
             header: () => (
-              <Pressable
-                onPress={() => {
-                  dispatch({ type: actions.login, user: null })
-                  storeData(null)
-                }}
-              >
-                <Text
-                  style={{
-                    color: 'red',
-                    fontWeight: 900,
-                    textAlign: 'right',
-                    paddingHorizontal: 50,
-                    paddingTop: 50,
+              <View style={{ flexDirection: 'row', marginBottom: 50 }}>
+                <Pressable onPress={() => {}}>
+                  <Text
+                    style={{
+                      color: 'red',
+                      fontWeight: 900,
+                      paddingHorizontal: 50,
+                      paddingTop: 50,
+                    }}
+                  >
+                    Profil
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    dispatch({ type: actions.login, user: null })
+                    storeData(null)
                   }}
                 >
-                  Déconnecter
-                </Text>
-              </Pressable>
+                  <Text
+                    style={{
+                      color: 'red',
+                      fontWeight: 900,
+                      paddingHorizontal: 150,
+                      paddingTop: 50,
+                    }}
+                  >
+                    Déconnecter
+                  </Text>
+                </Pressable>
+              </View>
             ),
           }}
         >
@@ -210,14 +243,11 @@ const Navigator = () => {
                 return (
                   <View
                     style={{
-                      paddingLeft: 30,
-                      zIndex: 1000,
-                      width: '200%',
-                      height: '100%',
-
-                      flex: 1,
-                      alignItems: 'center',
+                      backgroundColor: '#00eeff36',
                       justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
                     }}
                   >
                     <Text style={{ textAlign: 'center' }}>Liste Commandes</Text>
@@ -226,7 +256,7 @@ const Navigator = () => {
               },
               tabBarLabel: () => {},
             }}
-            component={HomePlanificateur}
+            component={HomeFournisseur}
           />
           <Tab.Screen
             name="Liste des Chauffeurs"
@@ -235,14 +265,11 @@ const Navigator = () => {
                 return (
                   <View
                     style={{
-                      paddingLeft: 30,
-                      zIndex: 1000,
-                      width: '200%',
-                      height: '100%',
-
-                      flex: 1,
-                      alignItems: 'center',
+                      backgroundColor: '#00eeff36',
                       justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
                     }}
                   >
                     <Text style={{ textAlign: 'center' }}>

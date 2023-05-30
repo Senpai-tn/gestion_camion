@@ -14,7 +14,6 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import dayjs from 'dayjs'
 
 const ListCommands = ({ navigation }) => {
-  const [agent, setAgent] = useState(null)
   const [listCommandsState, setListCommandesState] = useState([])
 
   const consulterListCommandes = () => {
@@ -23,8 +22,6 @@ const ListCommands = ({ navigation }) => {
     })
   }
   const route = useRoute()
-
-  const [listAgentState, setListAgentState] = useState([])
 
   const supprimerAgent = (user) => {
     axios
@@ -35,11 +32,6 @@ const ListCommands = ({ navigation }) => {
       .then((response) => {
         consulterListCommandes()
       })
-  }
-
-  const modifierAgent = (user) => {
-    setAgent(user)
-    navigation.navigate('Form Agent', { type: 'Modifier', agent: user })
   }
 
   useEffect(() => {
@@ -55,10 +47,10 @@ const ListCommands = ({ navigation }) => {
             navigation.navigate('Form Agent', { type: 'Ajouter' })
           }}
         />
-        {listCommandsState.map((agent, index) => {
+        {listCommandsState.map((commande, index) => {
           return (
             <View
-              key={agent._id}
+              key={commande._id}
               style={{
                 flexDirection: 'row',
                 flexWrap: 'wrap',
@@ -70,33 +62,37 @@ const ListCommands = ({ navigation }) => {
               }}
             >
               <Text style={{ marginHorizontal: 30 }}>
-                {dayjs(agent.date).format('DD-MM-YYYY')}
+                {dayjs(commande.date).format('DD-MM-YYYY')}
               </Text>
               <Text style={{ marginHorizontal: 30 }}>
-                {agent.fournisseur.firstName} {agent.fournisseur.lastName}
+                {commande.fournisseur
+                  ? commande.fournisseur.firstName +
+                    ' ' +
+                    commande.fournisseur.lastName
+                  : ''}
               </Text>
 
               <Pressable
-                disabled={agent.etat !== 'Envoyée'}
+                disabled={commande.etat !== 'Envoyée'}
                 style={{ marginHorizontal: 30 }}
                 onPress={() => {
-                  modifierAgent(agent)
+                  modifierAgent(commande)
                 }}
               >
                 <Ionicons
                   name="md-pencil"
                   size={32}
-                  color={agent.etat !== 'Envoyée' ? 'black' : 'orange'}
+                  color={commande.etat !== 'Envoyée' ? 'black' : 'orange'}
                 />
               </Pressable>
               <Pressable
-                disabled={agent.etat !== 'Envoyée'}
+                disabled={commande.etat !== 'Envoyée'}
                 onPress={() => {
-                  supprimerAgent(agent)
+                  supprimerAgent(commande)
                 }}
               >
                 <Ionicons
-                  color={agent.etat !== 'Envoyée' ? 'black' : 'red'}
+                  color={commande.etat !== 'Envoyée' ? 'black' : 'red'}
                   name="md-trash"
                   size={32}
                 />

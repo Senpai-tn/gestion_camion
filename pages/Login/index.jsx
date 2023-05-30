@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { View, Text, Button, Pressable } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import actions from '../../redux/actions'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Controller, useForm } from 'react-hook-form'
 import axios from 'axios'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -10,20 +9,13 @@ import validator from 'validator'
 import Checkbox from 'expo-checkbox'
 import Constants from 'expo-constants'
 import { TextInputComp } from '../../components'
+import { storeData } from '../../Utils/localStorage'
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state)
   const { control, handleSubmit, setError } = useForm({
     defaultValues: { email: '', password: '', remember: true },
   })
-  const storeData = async (value) => {
-    try {
-      const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('user', jsonValue)
-    } catch (e) {
-      console.log(e)
-    }
-  }
 
   const loginAction = (data) => {
     const { email, password, remember } = data

@@ -11,9 +11,7 @@ import axios from 'axios'
 import Constants from 'expo-constants'
 import { useRoute } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import FormFournisseur from './FormFournisseur'
 const ListFournisseur = ({ navigation }) => {
-  const [fournisseur, setFournisseur] = useState(null)
   const route = useRoute()
 
   const [listFournisseurState, setListFournisseursState] = useState([])
@@ -39,11 +37,6 @@ const ListFournisseur = ({ navigation }) => {
       .then((response) => {
         consulterListAgent()
       })
-  }
-
-  const modifierAgent = (user) => {
-    setFournisseur(user)
-    navigation.navigate('Form Fournisseur', { type: 'Modifier', agent: user })
   }
 
   useEffect(() => {
@@ -77,14 +70,7 @@ const ListFournisseur = ({ navigation }) => {
               <Text style={{ marginHorizontal: 30 }}>
                 {agent.firstName} {agent.lastName}
               </Text>
-              <Pressable
-                style={{ marginHorizontal: 30 }}
-                onPress={() => {
-                  modifierAgent(agent)
-                }}
-              >
-                <Ionicons name="md-pencil" size={32} color="orange" />
-              </Pressable>
+
               <Pressable
                 onPress={() => {
                   supprimerAgent(agent)

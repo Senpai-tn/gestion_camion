@@ -6,9 +6,14 @@ import axios from 'axios'
 import Constants from 'expo-constants'
 import { useRoute } from '@react-navigation/native'
 import validator from 'validator'
+import { useDispatch, useSelector } from 'react-redux'
+import actions from '../../../redux/actions'
+import { storeData } from '../../../Utils/localStorage'
 
 const Add = ({ navigation }) => {
   const { params } = useRoute()
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state)
   const type = useRoute().params ? useRoute().params.type : 'Ajouter'
   const agent = useRoute().params ? useRoute().params.agent : null
   const { control, handleSubmit, setError, reset } = useForm({
@@ -25,23 +30,29 @@ const Add = ({ navigation }) => {
   const actionAgent = (data) => {
     const { firstName, lastName, email, password, tel, cin, confirmPassword } =
       data
+
     if (type === 'Ajouter') {
       if (email && validator.isEmail(email)) {
         if (password === confirmPassword) {
           axios
-            .post(Constants.expoConfig.extra.url + '/user', {
+            .post(Constants.expoConfig.extra.url + '/user/chauffeur', {
+              idFournisseur: user._id,
               firstName: firstName,
               lastName: lastName,
               email: email,
               password: password,
               tel: tel,
               cin: cin,
-              role: 'CHAUFFEUR',
             })
             .then((response) => {
-              navigation.navigate('Liste Agents', { agent: response.data })
+              dispatch({ type: actions.login, user: response.data })
+              storeData(response.data)
+              navigation.navigate('Liste des Chauffeurs', {
+                agent: response.data,
+              })
             })
-            .catch(() => {
+            .catch((error) => {
+              console.log(error)
               setError('cin', {
                 message: 'Duplicate des données',
               })
@@ -63,7 +74,9 @@ const Add = ({ navigation }) => {
             cin: cin,
           })
           .then((response) => {
-            navigation.navigate('Liste Agents', { agent: response.data })
+            navigation.navigate('Liste des Chauffeurs', {
+              agent: response.data,
+            })
           })
           .catch(() => {
             setError('cin', {
