@@ -17,8 +17,13 @@ import ListCommands from './pages/Planificateur/Commande/ListCommands'
 import FormCommande from './pages/Planificateur/Commande/FormCommande'
 import actions from './redux/actions'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Add, List } from './pages/Fournisseur/Chauffeur'
+import { Add as AddChauffeur, List } from './pages/Fournisseur/Chauffeur'
 import { Home as HomeFournisseur } from './pages/Fournisseur'
+import {
+  Add as AddCamion,
+  List as ListCamion,
+} from './pages/Fournisseur/Camion'
+import Livraison from './pages/Agent'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -287,9 +292,78 @@ const Navigator = () => {
             options={{
               tabBarButton: () => null,
             }}
-            component={Add}
+            component={AddChauffeur}
+          />
+          <Tab.Screen
+            name="Liste des Camions"
+            options={{
+              tabBarIcon: () => {
+                return (
+                  <View
+                    style={{
+                      backgroundColor: '#00eeff36',
+                      justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
+                    }}
+                  >
+                    <Text style={{ textAlign: 'center' }}>Liste Camions</Text>
+                  </View>
+                )
+              },
+              tabBarLabel: () => {},
+            }}
+            component={ListCamion}
+          />
+          <Tab.Screen
+            name="Add Truck"
+            options={{
+              tabBarButton: () => null,
+            }}
+            component={AddCamion}
           />
         </Tab.Navigator>
+      ) : user.role === 'AGENT_SECURITE' ? (
+        <Stack.Navigator
+          screenOptions={{
+            header: () => (
+              <View style={{ flexDirection: 'row', marginBottom: 50 }}>
+                <Pressable onPress={() => {}}>
+                  <Text
+                    style={{
+                      color: 'red',
+                      fontWeight: 900,
+                      paddingHorizontal: 50,
+                      paddingTop: 50,
+                    }}
+                  >
+                    Profil
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    dispatch({ type: actions.login, user: null })
+                    storeData(null)
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: 'red',
+                      fontWeight: 900,
+                      paddingHorizontal: 150,
+                      paddingTop: 50,
+                    }}
+                  >
+                    Déconnecter
+                  </Text>
+                </Pressable>
+              </View>
+            ),
+          }}
+        >
+          <Stack.Screen name="Home" component={Livraison} />
+        </Stack.Navigator>
       ) : null}
     </NavigationContainer>
   )

@@ -6,23 +6,28 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react'
 import axios from 'axios'
 import Constants from 'expo-constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'react-native-paper'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { storeData } from '../../../Utils/localStorage'
 import actions from '../../../redux/actions'
+import { storeData } from '../../../Utils/localStorage'
 
 const List = ({ navigation }) => {
   const { user } = useSelector((state) => state)
   const dispatch = useDispatch()
-  const supprimerChauffeur = (chauffeur) => {
+
+  const modifierCamion = (camion) => {
+    navigation.navigate('Add Truck', { camion, type: 'Modifier' })
+  }
+
+  const supprimerCamion = (camion) => {
     axios
-      .put(Constants.expoConfig.extra.url + '/user', {
-        id: chauffeur._id,
+      .put(Constants.expoConfig.extra.url + '/truck', {
+        id: camion._id,
         deletedAt: new Date(),
       })
       .then((response) => {
@@ -30,32 +35,33 @@ const List = ({ navigation }) => {
           type: actions.login,
           user: {
             ...user,
-            listeChauffeurs: user.listeChauffeurs.filter((c) => {
+            listeCamions: user.listeCamions.filter((c) => {
               return c._id !== response.data._id
             }),
           },
         })
         storeData({
           ...user,
-          listeChauffeurs: user.listeChauffeurs.filter((c) => {
+          listeCamions: user.listeCamions.filter((c) => {
             return c._id !== response.data._id
           }),
         })
       })
   }
+
   return (
     <View>
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('Add Chauffeur')
+          navigation.navigate('Add Truck')
         }}
       >
-        <Text>Ajouter un Chauffeur</Text>
+        <Text>Ajouter un Camions</Text>
       </TouchableOpacity>
-      {user.listeChauffeurs &&
-        user.listeChauffeurs
-          .filter((c) => {
-            return c.deletedAt === null
+      {user.listeCamions &&
+        user.listeCamions
+          .filter((camion) => {
+            return camion.deletedAt === null
           })
           .map((chauffeur, index) => {
             return (
@@ -74,10 +80,18 @@ const List = ({ navigation }) => {
                 }}
                 key={chauffeur._id}
               >
-                <Text>{chauffeur.firstName + ' ' + chauffeur.lastName}</Text>
+                <Text style={{ width: '40%' }}>{chauffeur.model}</Text>
+                <Text style={{ width: '40%' }}>{chauffeur.serieNumber}</Text>
                 <Pressable
                   onPress={() => {
-                    supprimerChauffeur(chauffeur)
+                    modifierCamion(chauffeur)
+                  }}
+                >
+                  <Ionicons name="md-pencil" size={32} color="orange" />
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    supprimerCamion(chauffeur)
                   }}
                 >
                   <Ionicons name="md-trash" size={32} color="red" />

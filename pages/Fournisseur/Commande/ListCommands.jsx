@@ -29,8 +29,20 @@ const ListCommands = ({ navigation }) => {
         etat,
       })
       .then((resonse) => {
-        setCommandesState(null)
-        consulterListCommandes()
+        etat === 'Confirmée'
+          ? axios
+              .post(Constants.expoConfig.extra.url + '/livraison', {
+                date: CommandsState.date,
+                camion: '64773be7e681d321994f4dab',
+                chauffeur: '64740194d881e0971ebb0f4a',
+                fournisseur: user._id,
+                listProducts: CommandsState.listProducts,
+              })
+              .then((livraison) => {
+                setCommandesState(null)
+                consulterListCommandes()
+              })
+          : (setCommandesState(null), consulterListCommandes())
       })
   }
   const consulterListCommandes = () => {
@@ -55,7 +67,10 @@ const ListCommands = ({ navigation }) => {
       <View>
         {CommandsState && (
           <Modal animationType="slide" transparent={true}>
-            <View
+            <Pressable
+              onPress={() => {
+                setCommandesState(null)
+              }}
               style={{
                 height: 150,
                 width: '100%',
@@ -112,7 +127,7 @@ const ListCommands = ({ navigation }) => {
                   />
                 </Pressable>
               </View>
-            </View>
+            </Pressable>
           </Modal>
         )}
         <Text>{listCommandsState.length} Commande(s)</Text>

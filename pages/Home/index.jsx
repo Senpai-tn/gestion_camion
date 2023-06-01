@@ -3,18 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import actions from '../../redux/actions'
 import { useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { storeData } from '../../Utils/localStorage'
 
 function Home({ navigation }) {
   const { user, somme } = useSelector((state) => state)
   const dispatch = useDispatch()
-  const storeData = async (value) => {
-    try {
-      const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('user', jsonValue)
-    } catch (e) {
-      console.log(e)
-    }
-  }
+
   return (
     <View>
       <Text>Home Screen</Text>

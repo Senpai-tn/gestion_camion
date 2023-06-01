@@ -32,21 +32,25 @@ const Login = ({ navigation }) => {
           remember && storeData(response.data)
         })
         .catch((error) => {
-          switch (error.response.status) {
-            case 404:
-              setError('email', { message: 'Email incorrecte' })
-              break
-            case 403:
-              setError('password', { message: 'Mot de passe incorrecte' })
-              break
-            case 402:
-              setError('email', { message: 'Votre compte est supprimé' })
-              break
-            case 401:
-              setError('email', {
-                message: 'Votre compte est bloqué pour période',
-              })
-              break
+          if (error.response) {
+            switch (error.response.status) {
+              case 404:
+                setError('email', { message: 'Email incorrecte' })
+                break
+              case 403:
+                setError('password', { message: 'Mot de passe incorrecte' })
+                break
+              case 402:
+                setError('email', { message: 'Votre compte est supprimé' })
+                break
+              case 401:
+                setError('email', {
+                  message: 'Votre compte est bloqué pour période',
+                })
+                break
+            }
+          } else {
+            alert(error.message)
           }
         })
     } else {
@@ -159,7 +163,14 @@ const Login = ({ navigation }) => {
           )}
         />
         <Pressable
-          style={{ backgroundColor: 'red' }}
+          style={{
+            backgroundColor: 'red',
+            height: 50,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 10,
+            width: 100,
+          }}
           onPress={handleSubmit(loginAction)}
         >
           <Text>Connecter</Text>
