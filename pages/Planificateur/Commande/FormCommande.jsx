@@ -79,13 +79,6 @@ const FormCommande = ({ navigation }) => {
       })
   }
 
-  const items = [
-    {
-      id: '6472d2ecb6d1abc533f42ef5',
-      name: 'Ondo',
-    },
-  ]
-
   useEffect(() => {
     reset({})
     consulterListAgent()

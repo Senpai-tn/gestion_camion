@@ -70,23 +70,17 @@ const Navigator = () => {
         <Tab.Navigator
           screenOptions={{
             header: () => (
-              <>
-                <Pressable
-                  onPress={() => {
-                    dispatch({ type: actions.login, user: null })
-                    storeData(null)
-                  }}
-                >
+              <View style={{ flexDirection: 'row', marginBottom: 50 }}>
+                <Pressable onPress={() => {}}>
                   <Text
                     style={{
                       color: 'red',
                       fontWeight: 900,
-                      textAlign: 'right',
                       paddingHorizontal: 50,
                       paddingTop: 50,
                     }}
                   >
-                    Déconnecter
+                    Profil
                   </Text>
                 </Pressable>
                 <Pressable
@@ -99,15 +93,14 @@ const Navigator = () => {
                     style={{
                       color: 'red',
                       fontWeight: 900,
-                      textAlign: 'left',
-                      paddingHorizontal: 50,
+                      paddingHorizontal: 150,
                       paddingTop: 50,
                     }}
                   >
                     Déconnecter
                   </Text>
                 </Pressable>
-              </>
+              </View>
             ),
           }}
         >
@@ -196,7 +189,7 @@ const Navigator = () => {
             component={ListCommands}
           />
           <Tab.Screen
-            name="Commande"
+            name="Form Commande"
             options={{
               tabBarButton: () => null,
             }}

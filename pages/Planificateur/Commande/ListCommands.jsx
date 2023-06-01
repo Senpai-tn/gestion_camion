@@ -42,9 +42,9 @@ const ListCommands = ({ navigation }) => {
       <View>
         <Text>Liste des Agents : {listCommandsState.length} actif</Text>
         <Button
-          title="Ajouter un agent"
+          title="Ajouter une Commande"
           onPress={() => {
-            navigation.navigate('Form Agent', { type: 'Ajouter' })
+            navigation.navigate('Form Commande', { type: 'Ajouter' })
           }}
         />
         {listCommandsState.map((commande, index) => {
