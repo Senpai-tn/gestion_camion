@@ -17,7 +17,7 @@ const TextInputComp = ({
         style={{
           borderWidth: 2,
           width: 250,
-
+          backgroundColor: 'white',
           borderRadius: 20,
           borderColor: error ? 'red' : 'white',
           color: error ? 'red' : 'black',

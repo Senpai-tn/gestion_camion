@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text, Button, Pressable } from 'react-native'
+import { View, Text, Button, Pressable, Dimensions } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import actions from '../../redux/actions'
 import { Controller, useForm } from 'react-hook-form'
@@ -10,6 +10,7 @@ import Checkbox from 'expo-checkbox'
 import Constants from 'expo-constants'
 import { TextInputComp } from '../../components'
 import { storeData } from '../../Utils/localStorage'
+import { Image } from 'react-native'
 const Login = ({ navigation }) => {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state)
@@ -56,61 +57,6 @@ const Login = ({ navigation }) => {
     } else {
       setError('email', { message: 'Email non valide' })
     }
-
-    // axios
-    //   .post('http://127.0.0.1:3120/user', {
-    //     firstName: 'BBBBBB',
-    //     lastName: 'BBBBBB',
-    //     email: 'AAAAA',
-    //     password: 'AAAAA',
-    //     tel: 'AAAAA',
-    //     cin: 'AAAAA',
-    //     role: 'SUPER_ADMIN',
-    //     listeCamions: [],
-    //     listeChauffeurs: [],
-    //     categorie: 'AAAAA',
-    //     adresse: 'AAAAA',
-    //     listeCommandes: [],
-    //   })
-    //   .then((response) => {
-    //     dispatch({
-    //       type: actions.login,
-    //       user: response.data,
-    //     })
-    //     storeData(response.data)
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
-
-    // axios
-    // .put('http://127.0.0.1:3120/user', {
-    //   id: '6466708368bdab128f411df3',
-    //   deletedAt: new Date(),
-    // })
-    // .then((response) => {
-    //   dispatch({
-    //     type: actions.login,
-    //     user: response.data,
-    //   })
-    //   storeData(response.data)
-    // })
-    // .catch((error) => {
-    //   console.log(error)
-    // })
-
-    // axios
-    //   .delete('http://127.0.0.1:3120/user', {
-    //     data: {
-    //       id: '6466708368bdab128f411df3',
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log(response.data)
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
   }
 
   return (
@@ -124,6 +70,10 @@ const Login = ({ navigation }) => {
       }}
     >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          source={require('../../assets/logo.png')}
+          style={{ height: '7%', width: Dimensions.get('window').width - 100 }}
+        />
         <Controller
           control={control}
           name="email"

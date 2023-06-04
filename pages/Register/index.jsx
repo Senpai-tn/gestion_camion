@@ -1,4 +1,13 @@
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  Button,
+  Dimensions,
+  Image,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Controller, useForm } from 'react-hook-form'
@@ -9,6 +18,12 @@ import axios from 'axios'
 import Constants from 'expo-constants'
 
 const Register = ({ navigation }) => {
+  const styles = StyleSheet.create({
+    image: {
+      flex: 1,
+      justifyContent: 'center',
+    },
+  })
   const agences = [
     { name: 'Sagem Ezzahra', code: 5 },
     { name: 'Sagem Borj ghorbel', code: 8 },
@@ -83,213 +98,249 @@ const Register = ({ navigation }) => {
         width: '100%',
       }}
     >
-      <ScrollView
-        contentContainerStyle={{
-          padding: 20,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+      <ImageBackground
+        source={require('../../assets/signup.png')}
+        resizeMode="contain"
+        style={styles.image}
       >
-        <View
-          style={{
+        <ScrollView
+          contentContainerStyle={{
+            padding: 20,
             alignItems: 'center',
             justifyContent: 'center',
-            paddingTop: 80,
           }}
         >
-          <Text>Register</Text>
-          <Controller
-            name="firstName"
-            control={control}
-            rules={{
-              required: { value: true, message: 'Champs Prénom obligatoire' },
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingTop: 80,
             }}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <TextInputComp
-                placeholder={'Prénom'}
-                value={value}
-                onChange={onChange}
-                error={error}
-              />
-            )}
-          />
-          <Controller
-            name="lastName"
-            control={control}
-            rules={{
-              required: { value: true, message: 'Champs Nom obligatoire' },
-            }}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <TextInputComp
-                placeholder={'Nom'}
-                value={value}
-                onChange={onChange}
-                error={error}
-              />
-            )}
-          />
-          <Controller
-            name="email"
-            rules={{
-              required: { value: true, message: 'Champs Email obligatoire' },
-            }}
-            control={control}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <TextInputComp
-                placeholder={'Email'}
-                value={value}
-                onChange={onChange}
-                error={error}
-              />
-            )}
-          />
-          <Controller
-            name="password"
-            rules={{
-              required: {
-                value: true,
-                message: 'Champs Mot de passe obligatoire',
-              },
-            }}
-            control={control}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <TextInputComp
-                type={'password'}
-                placeholder={'Mot de passe'}
-                value={value}
-                onChange={onChange}
-                error={error}
-              />
-            )}
-          />
-          <Controller
-            name="confirmPassword"
-            rules={{
-              required: {
-                value: true,
-                message: 'Champs Confirmation mot de passe obligatoire',
-              },
-            }}
-            control={control}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <TextInputComp
-                type={'password'}
-                placeholder={'Confirmer votre mot de passe'}
-                value={value}
-                onChange={onChange}
-                error={error}
-              />
-            )}
-          />
-          <Controller
-            name="tel"
-            rules={{
-              required: { value: true, message: 'Champs Tel obligatoire' },
-            }}
-            control={control}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <TextInputComp
-                placeholder={'Tel'}
-                value={value}
-                onChange={onChange}
-                error={error}
-              />
-            )}
-          />
-          <Controller
-            name="cin"
-            rules={{
-              required: { value: true, message: 'Champs CIN obligatoire' },
-              maxLength: { value: 8, message: 'Longeur doit être 8 chiffre' },
-              minLength: { value: 8, message: 'Longeur doit être 8 chiffre' },
-            }}
-            control={control}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <TextInputComp
-                type={'text'}
-                placeholder={'CIN'}
-                value={value}
-                onChange={onChange}
-                error={error}
-              />
-            )}
-          />
-          <Controller
-            name="agence"
-            control={control}
-            rules={{
-              required: { value: true, message: 'Choisir votre agence' },
-            }}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <SelectDropdown
-                data={agences}
-                value={value}
-                onSelect={(selectedItem, index) => {
-                  onChange(selectedItem, index)
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  // text represented after item is selected
-                  // if data array is an array of objects then return selectedItem.property to render after item is selected
-                  return selectedItem.name
-                }}
-                rowTextForSelection={(item, index) => {
-                  // text represented for each item in dropdown
-                  // if data array is an array of objects then return item.property to represent item in dropdown
-                  return item.name
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="service"
-            rules={{
-              required: { value: true, message: 'Choisir votre service' },
-            }}
-            control={control}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <SelectDropdown
-                data={services}
-                value={value}
-                onSelect={(selectedItem, index) => {
-                  onChange(selectedItem, index)
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  // text represented after item is selected
-                  // if data array is an array of objects then return selectedItem.property to render after item is selected
-                  return selectedItem.name
-                }}
-                rowTextForSelection={(item, index) => {
-                  // text represented for each item in dropdown
-                  // if data array is an array of objects then return item.property to represent item in dropdown
-                  return item.name
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="matricule"
-            control={control}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <TextInputComp
-                type={'text'}
-                placeholder={'Matricule'}
-                value={value}
-                onChange={onChange}
-                error={error}
-              />
-            )}
-          />
-          <Button title="Connecter" onPress={handleSubmit(registerAction)} />
-          <Text
-            onPress={() => {
-              navigation.navigate('Login')
-            }}
-            style={{ marginTop: 25 }}
           >
-            Se connecter
-          </Text>
-        </View>
-      </ScrollView>
+            <Text>Register</Text>
+            <Controller
+              name="firstName"
+              control={control}
+              rules={{
+                required: { value: true, message: 'Champs Prénom obligatoire' },
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInputComp
+                  placeholder={'Prénom'}
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                />
+              )}
+            />
+            <Controller
+              name="lastName"
+              control={control}
+              rules={{
+                required: { value: true, message: 'Champs Nom obligatoire' },
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInputComp
+                  placeholder={'Nom'}
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                />
+              )}
+            />
+            <Controller
+              name="email"
+              rules={{
+                required: { value: true, message: 'Champs Email obligatoire' },
+              }}
+              control={control}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInputComp
+                  placeholder={'Email'}
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                />
+              )}
+            />
+            <Controller
+              name="password"
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Champs Mot de passe obligatoire',
+                },
+              }}
+              control={control}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInputComp
+                  type={'password'}
+                  placeholder={'Mot de passe'}
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                />
+              )}
+            />
+            <Controller
+              name="confirmPassword"
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Champs Confirmation mot de passe obligatoire',
+                },
+              }}
+              control={control}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInputComp
+                  type={'password'}
+                  placeholder={'Confirmer votre mot de passe'}
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                />
+              )}
+            />
+            <Controller
+              name="tel"
+              rules={{
+                required: { value: true, message: 'Champs Tel obligatoire' },
+              }}
+              control={control}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInputComp
+                  placeholder={'Tel'}
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                />
+              )}
+            />
+            <Controller
+              name="cin"
+              rules={{
+                required: { value: true, message: 'Champs CIN obligatoire' },
+                maxLength: { value: 8, message: 'Longeur doit être 8 chiffre' },
+                minLength: { value: 8, message: 'Longeur doit être 8 chiffre' },
+              }}
+              control={control}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInputComp
+                  type={'text'}
+                  placeholder={'CIN'}
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                />
+              )}
+            />
+            <Controller
+              name="agence"
+              control={control}
+              rules={{
+                required: { value: true, message: 'Choisir votre agence' },
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <SelectDropdown
+                  data={agences}
+                  value={value}
+                  onSelect={(selectedItem, index) => {
+                    onChange(selectedItem, index)
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.name
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item.name
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="service"
+              rules={{
+                required: { value: true, message: 'Choisir votre service' },
+              }}
+              control={control}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <SelectDropdown
+                  data={services}
+                  value={value}
+                  onSelect={(selectedItem, index) => {
+                    onChange(selectedItem, index)
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem.name
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item.name
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="matricule"
+              control={control}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <TextInputComp
+                  type={'text'}
+                  placeholder={'Matricule'}
+                  value={value}
+                  onChange={onChange}
+                  error={error}
+                />
+              )}
+            />
+            <Button title="Connecter" onPress={handleSubmit(registerAction)} />
+            <Text
+              onPress={() => {
+                navigation.navigate('Login')
+              }}
+              style={{ marginTop: 25 }}
+            >
+              Se connecter
+            </Text>
+          </View>
+        </ScrollView>
+      </ImageBackground>
     </LinearGradient>
   )
 }
