@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Pressable, Button } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Button,
+  ScrollView,
+} from 'react-native'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { TextInputComp } from '../../../components'
@@ -7,6 +14,7 @@ import Constants from 'expo-constants'
 import { useRoute } from '@react-navigation/native'
 import validator from 'validator'
 import { useEffect } from 'react'
+import Navbar from '../../../components/Navbar'
 
 const FormAgent = ({ navigation }) => {
   const { params } = useRoute()
@@ -83,113 +91,162 @@ const FormAgent = ({ navigation }) => {
     })
   }, [params, navigation])
   return (
-    <View>
-      <Text style={{ textAlign: 'center', fontWeight: '900', fontSize: 30 }}>
-        {type} Fournisseur
-      </Text>
-      <Controller
-        name="firstName"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder="Prénom"
-          />
-        )}
-      />
-      <Controller
-        name="lastName"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp value={value} onChange={onChange} placeholder="Nom" />
-        )}
-      />
-      <Controller
-        name="cin"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp value={value} onChange={onChange} placeholder="CIN" />
-        )}
-      />
-      <Controller
-        name="email"
-        control={control}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder="Email"
-            error={error}
-          />
-        )}
-      />
-      <Controller
-        name="tel"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder={'Tel'}
-          />
-        )}
-      />
-      <Controller
-        name="adresse"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder={'Adresse'}
-          />
-        )}
-      />
-      <Controller
-        name="categorie"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder={'Catégorie'}
-          />
-        )}
-      />
+    <ScrollView>
+      <Navbar navigation={navigation} />
+      <View style={{ display: 'flex', alignItems: 'center' }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            fontWeight: '900',
+            fontSize: 30,
+            marginBottom: 50,
+          }}
+        >
+          {type} Fournisseur
+        </Text>
+        <Controller
+          name="firstName"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder="Prénom"
+              error={error}
+            />
+          )}
+        />
+        <Controller
+          name="lastName"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder="Nom"
+              error={error}
+            />
+          )}
+        />
+        <Controller
+          name="cin"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder="CIN"
+              error={error}
+            />
+          )}
+        />
+        <Controller
+          name="email"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder="Email"
+              error={error}
+            />
+          )}
+        />
+        <Controller
+          name="tel"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder={'Tel'}
+              error={error}
+            />
+          )}
+        />
+        <Controller
+          name="adresse"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder={'Adresse'}
+              error={error}
+            />
+          )}
+        />
+        <Controller
+          name="categorie"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder={'Catégorie'}
+              error={error}
+            />
+          )}
+        />
 
-      <Controller
-        name="password"
-        control={control}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder="Mot de passe"
-            type={'password'}
-            error={error}
-          />
-        )}
-      />
-      <Controller
-        name="confirmPassword"
-        control={control}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder="Confirmez votre mot de passe "
-            type={'password'}
-            error={error}
-          />
-        )}
-      />
+        <Controller
+          name="password"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder="Mot de passe"
+              type={'password'}
+              error={error}
+            />
+          )}
+        />
+        <Controller
+          name="confirmPassword"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder="Confirmez votre mot de passe "
+              type={'password'}
+              error={error}
+            />
+          )}
+        />
 
-      <Button title={type} onPress={handleSubmit(actionAgent)} />
-    </View>
+        <Button title={type} onPress={handleSubmit(actionAgent)} />
+      </View>
+    </ScrollView>
   )
 }
 
 export default FormAgent
-
-const styles = StyleSheet.create({})

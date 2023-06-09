@@ -5,16 +5,18 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   Pressable,
+  Button,
 } from 'react-native'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import axios from 'axios'
 import Constants from 'expo-constants'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button } from 'react-native-paper'
+
 import Ionicons from '@expo/vector-icons/Ionicons'
 import actions from '../../../redux/actions'
 import { storeData } from '../../../Utils/localStorage'
+import Navbar from '../../../components/Navbar'
 
 const List = ({ navigation }) => {
   const { user } = useSelector((state) => state)
@@ -51,13 +53,13 @@ const List = ({ navigation }) => {
 
   return (
     <View>
-      <TouchableOpacity
+      <Navbar navigation={navigation} />
+      <Button
+        title="Ajouter un Camions"
         onPress={() => {
-          navigation.navigate('Add Truck')
+          navigation.navigate('Add Truck', { type: 'Ajouter' })
         }}
-      >
-        <Text>Ajouter un Camions</Text>
-      </TouchableOpacity>
+      />
       {user.listeCamions &&
         user.listeCamions
           .filter((camion) => {

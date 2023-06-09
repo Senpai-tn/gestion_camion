@@ -17,6 +17,7 @@ import { useState } from 'react'
 import MultiSelect from 'react-native-multiple-select'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import dayjs from 'dayjs'
+import Navbar from '../../../components/Navbar'
 
 const FormCommande = ({ navigation }) => {
   const [listFournisseurState, setListFournisseursState] = useState([])
@@ -51,7 +52,7 @@ const FormCommande = ({ navigation }) => {
     defaultValues: {
       listProducts: [],
       products: [],
-      date: new Date(),
+      date: null,
       fournisseur: null,
     },
   })
@@ -92,21 +93,26 @@ const FormCommande = ({ navigation }) => {
 
   return (
     <ScrollView>
+      <Navbar navigation={navigation} />
       <Text
-        onPress={() => {
-          setOpen(true)
+        style={{
+          textAlign: 'center',
+          fontWeight: '900',
+          fontSize: 30,
+          marginBottom: 50,
         }}
-        style={{ textAlign: 'center', fontWeight: '900', fontSize: 30 }}
       >
         {type} Commande
       </Text>
+      <Text onPress={() => setOpen(true)}>Choisir date du commande </Text>
+      <Text>{watch('date') && dayjs(watch('date')).format('DD-MM-YYYY')}</Text>
       <Controller
         control={control}
         name="date"
         render={({ field: { value, onChange } }) =>
           open && (
             <DateTimePicker
-              value={value}
+              value={value || new Date()}
               onChange={(e) => {
                 onChange(new Date(e.nativeEvent.timestamp))
                 setOpen(false)
@@ -143,10 +149,13 @@ const FormCommande = ({ navigation }) => {
             hideTags
             items={listProducts}
             uniqueKey="id"
+            itemFontSize={20}
+            fontSize={20}
+            styleInputGroup={{ height: 50 }}
             onSelectedItemsChange={onChange}
             selectedItems={value}
             selectText="Pick Items"
-            searchInputPlaceholderText="Search Items..."
+            searchInputPlaceholderText="Rechercher"
             tagRemoveIconColor="#CCC"
             tagBorderColor="#CCC"
             tagTextColor="#CCC"
@@ -164,13 +173,22 @@ const FormCommande = ({ navigation }) => {
         watch('listProducts').map((id) => {
           return (
             <>
-              <Text>Quantité du : {id} (pièce)</Text>
+              <Text>
+                Quantité du :{' '}
+                {
+                  listProducts.find((p) => {
+                    return p.id === id
+                  }).name
+                }{' '}
+                (pièces)
+              </Text>
               <Controller
                 control={control}
                 name={'nbPallete/' + id}
                 render={({ field: { value, onChange } }) => (
                   <TextInputComp
                     keyboardType={'numeric'}
+                    placeholder={'Nombre des palettes'}
                     value={value}
                     onChange={onChange}
                   />
@@ -180,14 +198,22 @@ const FormCommande = ({ navigation }) => {
                 control={control}
                 name={'nbCarton/' + id}
                 render={({ field: { value, onChange } }) => (
-                  <TextInputComp value={value} onChange={onChange} />
+                  <TextInputComp
+                    keyboardType={'numeric'}
+                    value={value}
+                    placeholder={'Nombre des Cartons'}
+                    onChange={onChange}
+                  />
                 )}
               />
             </>
           )
         })}
 
-      <Button title={type} onPress={handleSubmit(actionAgent)} />
+      <Button
+        title={type === 'Ajouter' ? 'Envoyer' : type}
+        onPress={handleSubmit(actionAgent)}
+      />
     </ScrollView>
   )
 }

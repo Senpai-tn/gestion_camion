@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import React, { useEffect } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, useNavigation } from '@react-navigation/native'
 import { Home, Login, Loading } from './pages'
 import { useDispatch, useSelector } from 'react-redux'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -24,7 +24,9 @@ import {
   List as ListCamion,
 } from './pages/Fournisseur/Camion'
 import Livraison from './pages/Agent'
-
+import Profil from './pages/Profile'
+import { navigationRef } from './RootNavigation'
+import Chauffeur from './pages/Chauffeur'
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
@@ -40,7 +42,7 @@ const Navigator = () => {
   const { user } = useSelector((state) => state)
   const dispatch = useDispatch()
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       {user === undefined ? (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
@@ -62,46 +64,11 @@ const Navigator = () => {
             component={Register}
           />
         </Stack.Navigator>
-      ) : user.role === 'SUPER_ADMIN' ? (
-        <Stack.Navigator>
-          <Stack.Screen name="Home" component={Home} />
-        </Stack.Navigator>
       ) : user.role === 'PLANIFICATEUR' ? (
         <Tab.Navigator
+          sceneContainerStyle={{ paddingTop: 50, paddingLeft: 10 }}
           screenOptions={{
-            header: () => (
-              <View style={{ flexDirection: 'row', marginBottom: 50 }}>
-                <Pressable onPress={() => {}}>
-                  <Text
-                    style={{
-                      color: 'red',
-                      fontWeight: 900,
-                      paddingHorizontal: 50,
-                      paddingTop: 50,
-                    }}
-                  >
-                    Profil
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    dispatch({ type: actions.login, user: null })
-                    storeData(null)
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: 'red',
-                      fontWeight: 900,
-                      paddingHorizontal: 150,
-                      paddingTop: 50,
-                    }}
-                  >
-                    Déconnecter
-                  </Text>
-                </Pressable>
-              </View>
-            ),
+            headerShown: false,
           }}
         >
           <Tab.Screen
@@ -111,14 +78,16 @@ const Navigator = () => {
                 return (
                   <View
                     style={{
-                      paddingLeft: 30,
-                      zIndex: 1000,
-                      width: '200%',
-                      height: '100%',
-
-                      flex: 1,
-                      alignItems: 'center',
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Liste Agents'
+                          ? '#FFBCB8'
+                          : 'white',
                       justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
                     }}
                   >
                     <Text style={{ textAlign: 'center' }}>Liste Agents</Text>
@@ -144,14 +113,21 @@ const Navigator = () => {
                 return (
                   <View
                     style={{
-                      width: '200%',
-
-                      flex: 1,
-                      alignItems: 'center',
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Liste Fournisseurs'
+                          ? '#FFBCB8'
+                          : 'white',
                       justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
                     }}
                   >
-                    <Text>Liste Fournisseurs</Text>
+                    <Text style={{ textAlign: 'center' }}>
+                      Liste Fournisseurs
+                    </Text>
                   </View>
                 )
               },
@@ -173,14 +149,19 @@ const Navigator = () => {
                 return (
                   <View
                     style={{
-                      width: '200%',
-
-                      flex: 1,
-                      alignItems: 'center',
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Commandes'
+                          ? '#FFBCB8'
+                          : 'white',
                       justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
                     }}
                   >
-                    <Text>Commandes</Text>
+                    <Text style={{ textAlign: 'center' }}>Liste Commandes</Text>
                   </View>
                 )
               },
@@ -195,44 +176,38 @@ const Navigator = () => {
             }}
             component={FormCommande}
           />
+          <Tab.Screen
+            options={{
+              tabBarIcon: () => {
+                return (
+                  <View
+                    style={{
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Profil'
+                          ? '#FFBCB8'
+                          : 'white',
+                      justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
+                    }}
+                  >
+                    <Text style={{ textAlign: 'center' }}>Profil</Text>
+                  </View>
+                )
+              },
+              tabBarLabel: () => {},
+            }}
+            name="Profil"
+            component={Profil}
+          />
         </Tab.Navigator>
       ) : user.role === 'FOURNISSEUR' ? (
         <Tab.Navigator
-          screenOptions={{
-            header: () => (
-              <View style={{ flexDirection: 'row', marginBottom: 50 }}>
-                <Pressable onPress={() => {}}>
-                  <Text
-                    style={{
-                      color: 'red',
-                      fontWeight: 900,
-                      paddingHorizontal: 50,
-                      paddingTop: 50,
-                    }}
-                  >
-                    Profil
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    dispatch({ type: actions.login, user: null })
-                    storeData(null)
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: 'red',
-                      fontWeight: 900,
-                      paddingHorizontal: 150,
-                      paddingTop: 50,
-                    }}
-                  >
-                    Déconnecter
-                  </Text>
-                </Pressable>
-              </View>
-            ),
-          }}
+          sceneContainerStyle={{ paddingTop: 50, paddingLeft: 10 }}
+          screenOptions={{ headerShown: false }}
         >
           <Tab.Screen
             name="Liste des Commandes"
@@ -241,7 +216,12 @@ const Navigator = () => {
                 return (
                   <View
                     style={{
-                      backgroundColor: '#00eeff36',
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Liste des Commandes'
+                          ? '#00eeff36'
+                          : 'white',
                       justifyContent: 'center',
                       flex: 0.7,
                       paddingHorizontal: 10,
@@ -263,7 +243,12 @@ const Navigator = () => {
                 return (
                   <View
                     style={{
-                      backgroundColor: '#00eeff36',
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Liste des Chauffeurs'
+                          ? '#00eeff36'
+                          : 'white',
                       justifyContent: 'center',
                       flex: 0.7,
                       paddingHorizontal: 10,
@@ -294,7 +279,12 @@ const Navigator = () => {
                 return (
                   <View
                     style={{
-                      backgroundColor: '#00eeff36',
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Liste des Camions'
+                          ? '#00eeff36'
+                          : 'white',
                       justifyContent: 'center',
                       flex: 0.7,
                       paddingHorizontal: 10,
@@ -316,47 +306,133 @@ const Navigator = () => {
             }}
             component={AddCamion}
           />
+          <Tab.Screen
+            options={{
+              tabBarIcon: () => {
+                return (
+                  <View
+                    style={{
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Profil'
+                          ? '#00eeff36'
+                          : 'white',
+                      justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
+                    }}
+                  >
+                    <Text style={{ textAlign: 'center' }}>Profil</Text>
+                  </View>
+                )
+              },
+              tabBarLabel: () => {},
+            }}
+            name="Profil"
+            component={Profil}
+          />
         </Tab.Navigator>
       ) : user.role === 'AGENT_SECURITE' ? (
-        <Stack.Navigator
+        <Tab.Navigator
+          sceneContainerStyle={{ paddingTop: 50, paddingLeft: 10 }}
           screenOptions={{
-            header: () => (
-              <View style={{ flexDirection: 'row', marginBottom: 50 }}>
-                <Pressable onPress={() => {}}>
-                  <Text
-                    style={{
-                      color: 'red',
-                      fontWeight: 900,
-                      paddingHorizontal: 50,
-                      paddingTop: 50,
-                    }}
-                  >
-                    Profil
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    dispatch({ type: actions.login, user: null })
-                    storeData(null)
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: 'red',
-                      fontWeight: 900,
-                      paddingHorizontal: 150,
-                      paddingTop: 50,
-                    }}
-                  >
-                    Déconnecter
-                  </Text>
-                </Pressable>
-              </View>
-            ),
+            headerShown: false,
           }}
         >
-          <Stack.Screen name="Home" component={Livraison} />
-        </Stack.Navigator>
+          <Tab.Screen
+            options={{
+              tabBarIcon: () => {
+                return (
+                  <View
+                    style={{
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name === 'Home'
+                          ? '#C8ABFF'
+                          : 'white',
+                      justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
+                    }}
+                  >
+                    <Text style={{ textAlign: 'center' }}>
+                      Liste Livraisons
+                    </Text>
+                  </View>
+                )
+              },
+              tabBarLabel: () => {},
+            }}
+            name="Home"
+            component={Livraison}
+          />
+          <Tab.Screen
+            options={{
+              tabBarIcon: () => {
+                return (
+                  <View
+                    style={{
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Profil'
+                          ? '#C8ABFF'
+                          : 'white',
+                      justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
+                    }}
+                  >
+                    <Text style={{ textAlign: 'center' }}>Profil</Text>
+                  </View>
+                )
+              },
+              tabBarLabel: () => {},
+            }}
+            name="Profil"
+            component={Profil}
+          />
+        </Tab.Navigator>
+      ) : user.role === 'CHAUFFEUR' ? (
+        <Tab.Navigator
+          sceneContainerStyle={{ paddingTop: 50, paddingLeft: 10 }}
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Tab.Screen name="Home" component={Chauffeur} />
+          <Tab.Screen
+            options={{
+              tabBarIcon: () => {
+                return (
+                  <View
+                    style={{
+                      backgroundColor:
+                        navigationRef.current &&
+                        navigationRef.current.getCurrentRoute().name ===
+                          'Profil'
+                          ? '#C8ABFF'
+                          : 'white',
+                      justifyContent: 'center',
+                      flex: 0.7,
+                      paddingHorizontal: 10,
+                      borderRadius: 15,
+                    }}
+                  >
+                    <Text style={{ textAlign: 'center' }}>Profil</Text>
+                  </View>
+                )
+              },
+              tabBarLabel: () => {},
+            }}
+            name="Profil"
+            component={Profil}
+          />
+        </Tab.Navigator>
       ) : null}
     </NavigationContainer>
   )

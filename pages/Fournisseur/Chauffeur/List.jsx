@@ -2,19 +2,19 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   TouchableOpacity,
   Pressable,
+  ScrollView,
+  Button,
 } from 'react-native'
 import React from 'react'
-import { useEffect } from 'react'
 import axios from 'axios'
 import Constants from 'expo-constants'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button } from 'react-native-paper'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { storeData } from '../../../Utils/localStorage'
 import actions from '../../../redux/actions'
+import Navbar from '../../../components/Navbar'
 
 const List = ({ navigation }) => {
   const { user } = useSelector((state) => state)
@@ -44,14 +44,15 @@ const List = ({ navigation }) => {
       })
   }
   return (
-    <View>
-      <TouchableOpacity
+    <ScrollView>
+      <Navbar navigation={navigation} />
+      <Button
+        title="Ajouter un chauffeur"
         onPress={() => {
-          navigation.navigate('Add Chauffeur')
+          navigation.navigate('Add Chauffeur', { type: 'Ajouter' })
         }}
-      >
-        <Text>Ajouter un Chauffeur</Text>
-      </TouchableOpacity>
+      />
+
       {user.listeChauffeurs &&
         user.listeChauffeurs
           .filter((c) => {
@@ -85,7 +86,7 @@ const List = ({ navigation }) => {
               </View>
             )
           })}
-    </View>
+    </ScrollView>
   )
 }
 

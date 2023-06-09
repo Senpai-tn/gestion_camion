@@ -9,6 +9,7 @@ import validator from 'validator'
 import { useDispatch, useSelector } from 'react-redux'
 import actions from '../../../redux/actions'
 import { storeData } from '../../../Utils/localStorage'
+import Navbar from '../../../components/Navbar'
 
 const Add = ({ navigation }) => {
   const { params } = useRoute()
@@ -86,6 +87,7 @@ const Add = ({ navigation }) => {
   }, [params])
   return (
     <View>
+      <Navbar navigation={navigation} />
       <Text style={{ textAlign: 'center', fontWeight: '900', fontSize: 30 }}>
         {type} Camion
       </Text>

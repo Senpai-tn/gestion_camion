@@ -15,6 +15,7 @@ import { useRoute } from '@react-navigation/native'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import dayjs from 'dayjs'
 import { useSelector } from 'react-redux'
+import Navbar from '../../../components/Navbar'
 
 const ListCommands = ({ navigation }) => {
   const { user } = useSelector((state) => state)

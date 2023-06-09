@@ -1,5 +1,6 @@
 import {
   Button,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,12 +11,13 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Constants from 'expo-constants'
 import { useRoute } from '@react-navigation/native'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import dayjs from 'dayjs'
+import Navbar from '../../../components/Navbar'
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 
 const ListCommands = ({ navigation }) => {
   const [listCommandsState, setListCommandesState] = useState([])
-
+  const [commande, setCommande] = useState(null)
   const consulterListCommandes = () => {
     axios.get(Constants.expoConfig.extra.url + '/commande').then((response) => {
       setListCommandesState(response.data)
@@ -23,13 +25,15 @@ const ListCommands = ({ navigation }) => {
   }
   const route = useRoute()
 
-  const supprimerAgent = (user) => {
+  const supprimerCommande = () => {
     axios
       .put(Constants.expoConfig.extra.url + '/commande', {
-        id: user._id,
-        deletedAt: new Date(),
+        id: commande._id,
+        etat: 'Annulée',
       })
       .then((response) => {
+        console.log(response.data)
+        setCommande(null)
         consulterListCommandes()
       })
   }
@@ -39,6 +43,72 @@ const ListCommands = ({ navigation }) => {
   }, [route, navigation])
   return (
     <ScrollView>
+      {commande && (
+        <Modal animationType="slide" transparent={true}>
+          <Pressable
+            onPress={() => {
+              setCommande(null)
+            }}
+            style={{
+              height: 150,
+              width: '100%',
+              flex: 2,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#ffffffc9',
+            }}
+          >
+            <View
+              style={{
+                flex: 0.1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ width: 150, fontSize: 20, fontWeight: 700 }}>
+                Oui
+              </Text>
+              <Pressable
+                onPress={() => {
+                  supprimerCommande()
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="sticker-check"
+                  size={65}
+                  color="green"
+                />
+              </Pressable>
+            </View>
+            <View
+              style={{
+                flex: 0.1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ width: 150, fontSize: 20, fontWeight: 700 }}>
+                Non
+              </Text>
+              <Pressable
+                onPress={() => {
+                  setCommande(null)
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="sticker-remove"
+                  size={65}
+                  color="red"
+                />
+              </Pressable>
+            </View>
+          </Pressable>
+        </Modal>
+      )}
+      <Navbar navigation={navigation} />
       <View>
         <Text>Liste des Agents : {listCommandsState.length} actif</Text>
         <Button
@@ -55,16 +125,14 @@ const ListCommands = ({ navigation }) => {
                 flexDirection: 'row',
                 flexWrap: 'wrap',
                 backgroundColor: index % 2 === 0 ? 'grey' : 'white',
-                height: 50,
-                padding: 10,
+                padding: 3,
                 display: 'flex',
-                justifyContent: 'center',
               }}
             >
-              <Text style={{ marginHorizontal: 30 }}>
+              <Text style={{ width: '25%' }}>
                 {dayjs(commande.date).format('DD-MM-YYYY')}
               </Text>
-              <Text style={{ marginHorizontal: 30 }}>
+              <Text style={{ width: '50%' }}>
                 {commande.fournisseur
                   ? commande.fournisseur.firstName +
                     ' ' +
@@ -73,8 +141,8 @@ const ListCommands = ({ navigation }) => {
               </Text>
 
               <Pressable
+                style={{ width: '15%' }}
                 disabled={commande.etat !== 'Envoyée'}
-                style={{ marginHorizontal: 30 }}
                 onPress={() => {
                   modifierAgent(commande)
                 }}
@@ -86,9 +154,10 @@ const ListCommands = ({ navigation }) => {
                 />
               </Pressable>
               <Pressable
+                style={{ width: '10%' }}
                 disabled={commande.etat !== 'Envoyée'}
                 onPress={() => {
-                  supprimerAgent(commande)
+                  setCommande(commande)
                 }}
               >
                 <Ionicons

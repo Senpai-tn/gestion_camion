@@ -9,6 +9,7 @@ import Dropdown from '../../../components/Dropdown'
 import { useState } from 'react'
 import MultiSelect from 'react-native-multiple-select'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import Navbar from '../../../components/Navbar'
 
 const FormCommande = ({ navigation }) => {
   const [listFournisseurState, setListFournisseursState] = useState([])
@@ -91,6 +92,7 @@ const FormCommande = ({ navigation }) => {
 
   return (
     <ScrollView>
+      <Navbar navigation={navigation} />
       <Text
         onPress={() => {
           setOpen(true)

@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Pressable, Button } from 'react-native'
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Button,
+  ScrollView,
+} from 'react-native'
 import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { TextInputComp } from '../../../components'
@@ -9,6 +16,7 @@ import validator from 'validator'
 import { useDispatch, useSelector } from 'react-redux'
 import actions from '../../../redux/actions'
 import { storeData } from '../../../Utils/localStorage'
+import Navbar from '../../../components/Navbar'
 
 const Add = ({ navigation }) => {
   const { params } = useRoute()
@@ -99,97 +107,125 @@ const Add = ({ navigation }) => {
     })
   }, [params])
   return (
-    <View>
-      <Text style={{ textAlign: 'center', fontWeight: '900', fontSize: 30 }}>
-        {type} Chauffeur
-      </Text>
-      <Controller
-        name="firstName"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder="Prénom"
-          />
-        )}
-      />
-      <Controller
-        name="lastName"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp value={value} onChange={onChange} placeholder="Nom" />
-        )}
-      />
-      <Controller
-        name="cin"
-        control={control}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder="CIN"
-            error={error}
-          />
-        )}
-      />
-      <Controller
-        name="email"
-        control={control}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder="Email"
-            error={error}
-          />
-        )}
-      />
-      <Controller
-        name="tel"
-        control={control}
-        render={({ field: { value, onChange } }) => (
-          <TextInputComp
-            value={value}
-            onChange={onChange}
-            placeholder={'Tel'}
-          />
-        )}
-      />
-
-      {type === 'Ajouter' && (
+    <ScrollView>
+      <Navbar navigation={navigation} />
+      <View style={{ alignItems: 'center', display: 'flex' }}>
+        <Text style={{ textAlign: 'center', fontWeight: '900', fontSize: 30 }}>
+          {type} Chauffeur
+        </Text>
         <Controller
-          name="password"
+          name="firstName"
           control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder="Prénom"
+            />
+          )}
+        />
+        <Controller
+          name="lastName"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder="Nom"
+            />
+          )}
+        />
+        <Controller
+          name="cin"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <TextInputComp
               value={value}
               onChange={onChange}
-              placeholder="Mot de passe"
-              type={'password'}
+              placeholder="CIN"
               error={error}
             />
           )}
         />
-      )}
-      {type === 'Ajouter' && (
         <Controller
-          name="confirmPassword"
+          name="email"
           control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <TextInputComp
               value={value}
               onChange={onChange}
-              placeholder="Confirmez votre mot de passe "
-              type={'password'}
+              placeholder="Email"
               error={error}
             />
           )}
         />
-      )}
+        <Controller
+          name="tel"
+          control={control}
+          rules={{
+            required: { value: true, message: 'Champs obligatoire' },
+          }}
+          render={({ field: { value, onChange } }) => (
+            <TextInputComp
+              value={value}
+              onChange={onChange}
+              placeholder={'Tel'}
+            />
+          )}
+        />
 
-      <Button title={type} onPress={handleSubmit(actionAgent)} />
-    </View>
+        {type === 'Ajouter' && (
+          <Controller
+            name="password"
+            control={control}
+            rules={{
+              required: { value: true, message: 'Champs obligatoire' },
+            }}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <TextInputComp
+                value={value}
+                onChange={onChange}
+                placeholder="Mot de passe"
+                type={'password'}
+                error={error}
+              />
+            )}
+          />
+        )}
+        {type === 'Ajouter' && (
+          <Controller
+            name="confirmPassword"
+            control={control}
+            rules={{
+              required: { value: true, message: 'Champs obligatoire' },
+            }}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <TextInputComp
+                value={value}
+                onChange={onChange}
+                placeholder="Confirmez votre mot de passe "
+                type={'password'}
+                error={error}
+              />
+            )}
+          />
+        )}
+
+        <Button title={type} onPress={handleSubmit(actionAgent)} />
+      </View>
+    </ScrollView>
   )
 }
 
