@@ -32,6 +32,8 @@
     "react-hook-form": "^7.43.9",
     "react-native": "0.71.8",
     "react-native-date-picker": "^4.2.13",
+    "react-native-dropdown-picker": "^5.4.6",
+    "react-native-dropdown-picker-2": "^5.4.8",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-material-textfield": "^0.16.1",

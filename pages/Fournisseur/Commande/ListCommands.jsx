@@ -16,13 +16,45 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import dayjs from 'dayjs'
 import { useSelector } from 'react-redux'
 import Navbar from '../../../components/Navbar'
+import { Controller, useForm } from 'react-hook-form'
+import Dropdown from '../../../components/Dropdown'
 
 const ListCommands = ({ navigation }) => {
   const { user } = useSelector((state) => state)
   const [listCommandsState, setListCommandesState] = useState([])
+  const [ListFournisseur, setListFourniListFournisseur] = useState([])
+  const [listCamions, setListCoamions] = useState([])
   const [CommandsState, setCommandesState] = useState(null)
+  const [showFormulaire, setShowFormulaire] = useState(null)
   const route = useRoute()
+  const { control, watch } = useForm({
+    defaultValues: { chauffeur: null, camion: null },
+  })
 
+  const consulterListFournisseurs = () => {
+    axios
+      .get(Constants.expoConfig.extra.url + '/user/search', {
+        params: {
+          role: 'CHAUFFEUR',
+          deletedAt: null,
+        },
+      })
+      .then((response) => {
+        setListFourniListFournisseur(response.data)
+      })
+  }
+
+  const consulterListCamions = () => {
+    axios
+      .get(Constants.expoConfig.extra.url + '/truck', {
+        params: {
+          deletedAt: null,
+        },
+      })
+      .then((response) => {
+        setListCoamions(response.data)
+      })
+  }
   const modifierCommande = (etat) => {
     axios
       .put(Constants.expoConfig.extra.url + '/commande', {
@@ -34,13 +66,14 @@ const ListCommands = ({ navigation }) => {
           ? axios
               .post(Constants.expoConfig.extra.url + '/livraison', {
                 date: CommandsState.date,
-                camion: '64773be7e681d321994f4dab',
-                chauffeur: '64740194d881e0971ebb0f4a',
+                camion: watch('camion').id,
+                chauffeur: watch('chauffeur').id,
                 fournisseur: user._id,
                 listProducts: CommandsState.listProducts,
               })
               .then((livraison) => {
                 setCommandesState(null)
+                setShowFormulaire(false)
                 consulterListCommandes()
               })
           : (setCommandesState(null), consulterListCommandes())
@@ -58,6 +91,8 @@ const ListCommands = ({ navigation }) => {
 
   useEffect(() => {
     consulterListCommandes()
+    consulterListFournisseurs()
+    consulterListCamions()
     ToastAndroid.show(
       "NB : Maintenir sur commande pour l'accepter ou la refuser",
       ToastAndroid.LONG
@@ -95,7 +130,8 @@ const ListCommands = ({ navigation }) => {
                 </Text>
                 <Pressable
                   onPress={() => {
-                    modifierCommande('Confirmée')
+                    // modifierCommande('Confirmée')
+                    setShowFormulaire(true)
                   }}
                 >
                   <MaterialCommunityIcons
@@ -128,6 +164,62 @@ const ListCommands = ({ navigation }) => {
                   />
                 </Pressable>
               </View>
+              {showFormulaire && (
+                <View style={{ width: 300 }}>
+                  <Controller
+                    name="chauffeur"
+                    control={control}
+                    render={({
+                      field: { value, onChange },
+                      fieldState: { error },
+                    }) => (
+                      <>
+                        <Text>Chauffeur :</Text>
+                        <Dropdown
+                          onSelect={onChange}
+                          data={ListFournisseur.map((fournisseur) => {
+                            return {
+                              label:
+                                fournisseur.firstName +
+                                ' ' +
+                                fournisseur.lastName,
+                              id: fournisseur._id,
+                            }
+                          })}
+                        />
+                      </>
+                    )}
+                  />
+                  <Controller
+                    name="camion"
+                    control={control}
+                    render={({
+                      field: { value, onChange },
+                      fieldState: { error },
+                    }) => (
+                      <>
+                        <Text>Camion :</Text>
+                        <Dropdown
+                          onSelect={onChange}
+                          data={listCamions.map((fournisseur) => {
+                            return {
+                              label:
+                                fournisseur.model +
+                                ' ' +
+                                fournisseur.serieNumber,
+                              id: fournisseur._id,
+                            }
+                          })}
+                        />
+                      </>
+                    )}
+                  />
+                  <Button
+                    onPress={() => modifierCommande('Confirmée')}
+                    title="Confirmer Commande"
+                  ></Button>
+                </View>
+              )}
             </Pressable>
           </Modal>
         )}

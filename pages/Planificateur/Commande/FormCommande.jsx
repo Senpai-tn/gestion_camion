@@ -46,42 +46,64 @@ const FormCommande = ({ navigation }) => {
     })
   }
   const { params } = useRoute()
+
   const type = useRoute().params ? useRoute().params.type : 'Ajouter'
-  const agent = useRoute().params ? useRoute().params.agent : null
+  const commande = useRoute().params ? useRoute().params.commande : null
   const { control, handleSubmit, setError, reset, watch } = useForm({
     defaultValues: {
       listProducts: [],
-      products: [],
-      date: null,
+      date: type === 'Ajouter' ? new Date() : dayjs(commande.date),
       fournisseur: null,
     },
   })
   const actionAgent = (data) => {
-    const { listProducts, products, date, fournisseur } = data
+    console.log(data)
 
-    const convertedListProducts = listProducts.map((id) => {
-      return {
-        product: id,
-        qte: {
-          nbPallete: parseInt(watch('nbPallete/' + id)) || 0,
-          nbCarton: parseInt(watch('nbCarton/' + id)) || 0,
-        },
+    const { listProducts, date, fournisseur } = data
+    if (fournisseur) {
+      const convertedListProducts = listProducts.map((id) => {
+        return {
+          product: id,
+          qte: {
+            nbPallete: parseInt(watch('nbPallete/' + id)) || 0,
+            nbCarton: parseInt(watch('nbCarton/' + id)) || 0,
+          },
+        }
+      })
+
+      if (type === 'Ajouter') {
+        axios
+          .post(Constants.expoConfig.extra.url + '/commande', {
+            fournisseur: fournisseur.id,
+            date: date,
+            listProducts: convertedListProducts,
+          })
+          .then((response) => {
+            navigation.navigate('Commandes', { commande: response.data })
+          })
+      } else {
+        axios
+          .put(Constants.expoConfig.extra.url + '/commande', {
+            id: commande._id,
+            fournisseur: fournisseur.id,
+            listProducts: convertedListProducts,
+            etat: 'Envoyée',
+          })
+          .then((response) => {
+            navigation.navigate('Commandes', { commande: response.data })
+          })
       }
-    })
-
-    axios
-      .post(Constants.expoConfig.extra.url + '/commande', {
-        fournisseur: fournisseur.id,
-        date: date,
-        listProducts: convertedListProducts,
-      })
-      .then((response) => {
-        navigation.navigate('Commandes', { commande: response.data })
-      })
+    } else {
+      alert('Vous devez sélectionner le fournisseurs')
+    }
   }
 
   useEffect(() => {
-    reset({})
+    reset({
+      listProducts: [],
+      date: type === 'Ajouter' ? new Date() : dayjs(commande.date),
+      fournisseur: null,
+    })
     consulterListAgent()
     consulterListProducts()
   }, [params])
@@ -129,8 +151,10 @@ const FormCommande = ({ navigation }) => {
         render={({ field: { value, onChange }, fieldState: { error } }) => (
           <>
             <Text>Fournisseur :</Text>
+
             <Dropdown
               onSelect={onChange}
+              defaultValue={value}
               data={listFournisseurState.map((fournisseur) => {
                 return {
                   label: fournisseur.firstName + ' ' + fournisseur.lastName,

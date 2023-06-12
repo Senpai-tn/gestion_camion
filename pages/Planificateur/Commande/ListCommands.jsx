@@ -18,6 +18,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 const ListCommands = ({ navigation }) => {
   const [listCommandsState, setListCommandesState] = useState([])
   const [commande, setCommande] = useState(null)
+
   const consulterListCommandes = () => {
     axios.get(Constants.expoConfig.extra.url + '/commande').then((response) => {
       setListCommandesState(response.data)
@@ -36,6 +37,11 @@ const ListCommands = ({ navigation }) => {
         setCommande(null)
         consulterListCommandes()
       })
+  }
+
+  const modifierCommande = (commande) => {
+    console.log(commande)
+    navigation.navigate('Form Commande', { commande, type: 'Modifier' })
   }
 
   useEffect(() => {
@@ -110,7 +116,7 @@ const ListCommands = ({ navigation }) => {
       )}
       <Navbar navigation={navigation} />
       <View>
-        <Text>Liste des Agents : {listCommandsState.length} actif</Text>
+        <Text>Liste des Commandes : {listCommandsState.length} commandes</Text>
         <Button
           title="Ajouter une Commande"
           onPress={() => {
@@ -144,7 +150,7 @@ const ListCommands = ({ navigation }) => {
                 style={{ width: '15%' }}
                 disabled={commande.etat !== 'Envoyée'}
                 onPress={() => {
-                  modifierAgent(commande)
+                  modifierCommande(commande)
                 }}
               >
                 <Ionicons

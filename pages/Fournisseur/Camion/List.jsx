@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Pressable,
   Button,
+  Modal,
 } from 'react-native'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
@@ -13,7 +14,7 @@ import axios from 'axios'
 import Constants from 'expo-constants'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Ionicons from '@expo/vector-icons/Ionicons'
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import actions from '../../../redux/actions'
 import { storeData } from '../../../Utils/localStorage'
 import Navbar from '../../../components/Navbar'
@@ -21,12 +22,13 @@ import Navbar from '../../../components/Navbar'
 const List = ({ navigation }) => {
   const { user } = useSelector((state) => state)
   const dispatch = useDispatch()
+  const [camion, setCamion] = useState(null)
 
   const modifierCamion = (camion) => {
     navigation.navigate('Add Truck', { camion, type: 'Modifier' })
   }
 
-  const supprimerCamion = (camion) => {
+  const supprimerCamion = () => {
     axios
       .put(Constants.expoConfig.extra.url + '/truck', {
         id: camion._id,
@@ -48,6 +50,7 @@ const List = ({ navigation }) => {
             return c._id !== response.data._id
           }),
         })
+        setCamion(null)
       })
   }
 
@@ -60,6 +63,150 @@ const List = ({ navigation }) => {
           navigation.navigate('Add Truck', { type: 'Ajouter' })
         }}
       />
+      {camion && (
+        <Modal animationType="slide" transparent={true}>
+          <Pressable
+            onPress={() => {
+              setCamion(null)
+            }}
+            style={{
+              height: 150,
+              width: '100%',
+              flex: 2,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#ffffffc9',
+            }}
+          >
+            <View
+              style={{
+                flex: 0.1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ width: 150, fontSize: 20, fontWeight: 700 }}>
+                Oui
+              </Text>
+              <Pressable
+                onPress={() => {
+                  supprimerCamion()
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="sticker-check"
+                  size={65}
+                  color="green"
+                />
+              </Pressable>
+            </View>
+            <View
+              style={{
+                flex: 0.1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ width: 150, fontSize: 20, fontWeight: 700 }}>
+                Non
+              </Text>
+              <Pressable
+                onPress={() => {
+                  {
+                    camion && (
+                      <Modal animationType="slide" transparent={true}>
+                        <Pressable
+                          onPress={() => {
+                            setCamion(null)
+                          }}
+                          style={{
+                            height: 150,
+                            width: '100%',
+                            flex: 2,
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#ffffffc9',
+                          }}
+                        >
+                          <View
+                            style={{
+                              flex: 0.1,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <Text
+                              style={{
+                                width: 150,
+                                fontSize: 20,
+                                fontWeight: 700,
+                              }}
+                            >
+                              Oui
+                            </Text>
+                            <Pressable
+                              onPress={() => {
+                                supprimerFournisseur()
+                              }}
+                            >
+                              <MaterialCommunityIcons
+                                name="sticker-check"
+                                size={65}
+                                color="green"
+                              />
+                            </Pressable>
+                          </View>
+                          <View
+                            style={{
+                              flex: 0.1,
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <Text
+                              style={{
+                                width: 150,
+                                fontSize: 20,
+                                fontWeight: 700,
+                              }}
+                            >
+                              Non
+                            </Text>
+                            <Pressable
+                              onPress={() => {
+                                setCamion(null)
+                              }}
+                            >
+                              <MaterialCommunityIcons
+                                name="sticker-remove"
+                                size={65}
+                                color="red"
+                              />
+                            </Pressable>
+                          </View>
+                        </Pressable>
+                      </Modal>
+                    )
+                  }
+                  null
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="sticker-remove"
+                  size={65}
+                  color="red"
+                />
+              </Pressable>
+            </View>
+          </Pressable>
+        </Modal>
+      )}
       {user.listeCamions &&
         user.listeCamions
           .filter((camion) => {
@@ -93,7 +240,7 @@ const List = ({ navigation }) => {
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    supprimerCamion(chauffeur)
+                    setCamion(chauffeur)
                   }}
                 >
                   <Ionicons name="md-trash" size={32} color="red" />
